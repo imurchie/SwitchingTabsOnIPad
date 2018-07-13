@@ -45,6 +45,18 @@
             <artifactId>java-client</artifactId>
             <version>5.0.4</version>
         </dependency>
+        <dependency>
+            <groupId>com.saucelabs</groupId>
+            <artifactId>sauce_java_common</artifactId>
+            <version>2.1.23</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.saucelabs</groupId>
+            <artifactId>sauce_junit</artifactId>
+            <version>2.1.20</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
 </project>

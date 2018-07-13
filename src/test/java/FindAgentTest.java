@@ -1,31 +1,27 @@
 import AppiumUtil.ContextHandler;
-import io.appium.java_client.ios.IOSDriver;
-import org.junit.After;
-import org.junit.Before;
+import com.saucelabs.junit.ConcurrentParameterized;
 import org.junit.Test;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.net.MalformedURLException;
-import java.net.URL;
+import java.util.LinkedList;
 
 import static org.assertj.core.api.Assertions.*;
 
 
 public class FindAgentTest extends SauceTestBase
 {
-	@Before
-	public void setup() throws MalformedURLException
+	public FindAgentTest(String platformName, String platformVersion, String deviceName, String browserName)
 	{
-		URL url = getSauceURL();
+		super(platformName, platformVersion, deviceName, browserName);
+	}
 
-		DesiredCapabilities capabilities = SauceTestBase.getIPadProSimulatorCapabilities();
-		capabilities.setCapability("name", "Allstate Find Agent switch tabs by switching context");
-
-		driver = new IOSDriver<WebElement>(url, capabilities);
-		wait = new WebDriverWait(driver, 60);
+	@ConcurrentParameterized.Parameters
+	public static LinkedList getDevices()
+	{
+		return new LinkedList() {{
+			add(new String[] {"iOS", "11.3", "iPad Pro (12.9 inch) (2nd generation) Simulator", "Safari"});
+		}};
 	}
 
 	@Test
@@ -46,6 +42,7 @@ public class FindAgentTest extends SauceTestBase
 
 		// CONTEXT AFTER OPENING NEW TAB
 		ContextHandler.printContextInfo(driver);
+
 		assertThat(driver.getTitle()).isIn(Allstate.FindAgentPage.possibleTitles);
 
 		// SWITCH CONTEXT
@@ -55,11 +52,5 @@ public class FindAgentTest extends SauceTestBase
 		// CONTEXT AFTER SWITCHING BACK
 		ContextHandler.printContextInfo(driver);
 		assertThat(driver.getTitle()).isEqualTo(Allstate.HomePage.title);
-	}
-
-	@After
-	public void teardown()
-	{
-		driver.quit();
 	}
 }
