@@ -35,6 +35,9 @@ public class FindAgentAndSwitchContext
 		System.out.println("Click " + Allstate.HomePage.findAgentLink);
 		wait.until(ExpectedConditions.elementToBeClickable(Allstate.HomePage.findAgentLink)).click();
 
+		// WAIT A FEW SECONDS
+		try { Thread.sleep(5000); } catch (InterruptedException e) {}
+
 		// CONTEXT AFTER OPENING NEW TAB
 		printContextWindowAndTitle(driver);
 		assert(driver.getTitle().equals(Allstate.FindAgentPage.title));
@@ -62,7 +65,7 @@ public class FindAgentAndSwitchContext
 		capabilities.setCapability("browserName", "Safari");
 		capabilities.setCapability("locationServicesAuthorized", true);
 		capabilities.setCapability("nativeWebTap", true);
-		capabilities.setCapability("name", "Allstate Find Agent switching context");
+		capabilities.setCapability("name", "Allstate Find Agent and switch context");
 
 		return capabilities;
 	}
