@@ -35,8 +35,8 @@ public class FindAgentAndSwitchContext
 		System.out.println("Click " + Allstate.HomePage.findAgentLink);
 		wait.until(ExpectedConditions.elementToBeClickable(Allstate.HomePage.findAgentLink)).click();
 
-		// WAIT A FEW SECONDS
-		try { Thread.sleep(5000); } catch (InterruptedException e) {}
+		// WAIT FOR NEW TITLE
+		wait.until(ExpectedConditions.titleIs(Allstate.FindAgentPage.title));
 
 		// CONTEXT AFTER OPENING NEW TAB
 		printContextWindowAndTitle(driver);

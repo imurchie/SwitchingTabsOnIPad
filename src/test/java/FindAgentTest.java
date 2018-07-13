@@ -43,6 +43,9 @@ public class FindAgentTest extends SauceTestBase
 		System.out.println("Click " + Allstate.HomePage.findAgentLink);
 		wait.until(ExpectedConditions.elementToBeClickable(Allstate.HomePage.findAgentLink)).click();
 
+		wait.until(ExpectedConditions.titleIs(Allstate.FindAgentPage.title));
+
+
 		// CONTEXT AFTER OPENING NEW TAB
 		ContextHandler.printContextInfo(driver);
 		assertThat(driver.getTitle(), is(equalTo(Allstate.FindAgentPage.title)));
