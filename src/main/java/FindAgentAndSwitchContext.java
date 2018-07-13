@@ -1,6 +1,6 @@
+import Allstate.FindAgentPage;
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.ios.IOSDriver;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -35,12 +35,12 @@ public class FindAgentAndSwitchContext
 		System.out.println("Click " + Allstate.HomePage.findAgentLink);
 		wait.until(ExpectedConditions.elementToBeClickable(Allstate.HomePage.findAgentLink)).click();
 
-		// WAIT A FEW SECONDS
+		// WAIT A FEW SECONDS FOR PAGE TO LOAD
 		try { Thread.sleep(5000); } catch (InterruptedException e) {}
 
 		// CONTEXT AFTER OPENING NEW TAB
 		printContextWindowAndTitle(driver);
-		assert(driver.getTitle().contains("Agent"));
+		assert(FindAgentPage.possibleTitles.contains(driver.getTitle()));
 
 		// SWITCH CONTEXT
 		System.out.println("Switch context");
@@ -106,22 +106,5 @@ public class FindAgentAndSwitchContext
 		System.out.println("CURRENT WINDOW: " + driver.getWindowHandle());
 		System.out.println("TITLE: " + driver.getTitle());
 		System.out.println("------");
-	}
-
-	public static class Allstate
-	{
-		public static class HomePage
-		{
-			public static String url =  "https://www-stest.allstate.com/";
-			public static String title = "Auto Insurance Quotes - Car Insurance | Allstate Online Quote";
-			public static By findAgentLink = By.linkText("Find An Agent");
-		}
-
-		public static class FindAgentPage
-		{
-			public static String url = "https://agents.allstate.com/locator.html?zip=&intcid=%2Fhome%2Fhome.aspx%7CMainNav%7Cfindagent";
-//			public static String title = "Find Insurance Agents Near You | Allstate";
-			public static String title = "Insurance Agent Locator | Allstate";
-		}
 	}
 }

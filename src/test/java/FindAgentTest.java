@@ -11,9 +11,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import static org.hamcrest.core.Is.is;
-import static org.hamcrest.core.IsEqual.equalTo;
-import static org.junit.Assert.assertThat;
+import static org.assertj.core.api.Assertions.*;
+
 
 public class FindAgentTest extends SauceTestBase
 {
@@ -47,7 +46,7 @@ public class FindAgentTest extends SauceTestBase
 
 		// CONTEXT AFTER OPENING NEW TAB
 		ContextHandler.printContextInfo(driver);
-		assertThat(driver.getTitle(), is(equalTo(Allstate.FindAgentPage.title)));
+		assertThat(driver.getTitle()).isIn(Allstate.FindAgentPage.possibleTitles);
 
 		// SWITCH CONTEXT
 		System.out.println("Switch context"); // note switching app context / not window handle
@@ -55,7 +54,7 @@ public class FindAgentTest extends SauceTestBase
 
 		// CONTEXT AFTER SWITCHING BACK
 		ContextHandler.printContextInfo(driver);
-		assertThat(driver.getTitle(), is(equalTo(Allstate.HomePage.title)));
+		assertThat(driver.getTitle()).isEqualTo(Allstate.HomePage.title);
 	}
 
 	@After
