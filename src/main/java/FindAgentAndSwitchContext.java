@@ -35,12 +35,12 @@ public class FindAgentAndSwitchContext
 		System.out.println("Click " + Allstate.HomePage.findAgentLink);
 		wait.until(ExpectedConditions.elementToBeClickable(Allstate.HomePage.findAgentLink)).click();
 
-		// WAIT FOR NEW TITLE
-		wait.until(ExpectedConditions.titleIs(Allstate.FindAgentPage.title));
+		// WAIT A FEW SECONDS
+		try { Thread.sleep(5000); } catch (InterruptedException e) {}
 
 		// CONTEXT AFTER OPENING NEW TAB
 		printContextWindowAndTitle(driver);
-		assert(driver.getTitle().equals(Allstate.FindAgentPage.title));
+		assert(driver.getTitle().contains("Agent"));
 
 		// SWITCH CONTEXT
 		System.out.println("Switch context");
@@ -120,7 +120,8 @@ public class FindAgentAndSwitchContext
 		public static class FindAgentPage
 		{
 			public static String url = "https://agents.allstate.com/locator.html?zip=&intcid=%2Fhome%2Fhome.aspx%7CMainNav%7Cfindagent";
-			public static String title = "Find Insurance Agents Near You | Allstate";
+//			public static String title = "Find Insurance Agents Near You | Allstate";
+			public static String title = "Insurance Agent Locator | Allstate";
 		}
 	}
 }
