@@ -4,4 +4,4 @@ This demonstrates how to Switch between different tabs when using an iPad Pro.  
 
 To run this example you can clone the repo and run:
 
-  mvn clean test
+    mvn clean test
