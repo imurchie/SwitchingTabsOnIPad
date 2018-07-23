@@ -1,5 +1,6 @@
+package Allstate;
+
 import com.saucelabs.common.SauceOnDemandAuthentication;
-import com.saucelabs.junit.ConcurrentParameterized;
 import com.saucelabs.junit.SauceOnDemandTestWatcher;
 import com.saucelabs.saucerest.SauceREST;
 import io.appium.java_client.AppiumDriver;
@@ -8,7 +9,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.rules.TestName;
-import org.junit.runner.RunWith;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -17,11 +17,14 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import com.saucelabs.common.SauceOnDemandSessionIdProvider;
 
-@RunWith(ConcurrentParameterized.class)
 public class SauceTestBase implements SauceOnDemandSessionIdProvider
 {
-	public String SAUCE_USERNAME = System.getenv("SAUCE_USERNAME");
-	public String SAUCE_ACCESS_KEY = System.getenv("SAUCE_ACCESS_KEY");
+	public static String SAUCE_USERNAME = System.getenv("SAUCE_USERNAME");
+	public static String SAUCE_ACCESS_KEY = System.getenv("SAUCE_ACCESS_KEY");
+
+	public static String LOCAL_APPIUM_URL = "http://localhost:4723/wd/hub";
+	public static String SAUCE_URL = "https://" + SAUCE_USERNAME + ":" + SAUCE_ACCESS_KEY + "@ondemand.saucelabs.com/wd/hub";
+	public static String TESTOBJECT_URL = "https://us1.appium.testobject.com/wd/hub";
 
 	protected SauceREST api = new SauceREST(SAUCE_USERNAME, SAUCE_ACCESS_KEY);
 	protected SauceOnDemandAuthentication authentication = new SauceOnDemandAuthentication(SAUCE_USERNAME, SAUCE_ACCESS_KEY);
@@ -30,6 +33,7 @@ public class SauceTestBase implements SauceOnDemandSessionIdProvider
 	protected String platformVersion;
 	protected String deviceName;
 	protected String browserName;
+	protected String appiumUrl = SAUCE_URL;
 
 	protected URL url;
 	protected DesiredCapabilities capabilities;
@@ -51,12 +55,6 @@ public class SauceTestBase implements SauceOnDemandSessionIdProvider
 		this.browserName = browserName;
 	}
 
-	public  URL getSauceURL(String SAUCE_USERNAME, String SAUCE_ACCESS_KEY) throws MalformedURLException
-	{
-		String SAUCE_URL = "https://" + SAUCE_USERNAME + ":" + SAUCE_ACCESS_KEY + "@ondemand.saucelabs.com:443/wd/hub";
-		return new URL(SAUCE_URL);
-	}
-
 	public DesiredCapabilities getAppiumCapabilities(String platformName, String platformVersion, String deviceName, String browserName)
 	{
 		DesiredCapabilities capabilities = new DesiredCapabilities();
@@ -69,7 +67,8 @@ public class SauceTestBase implements SauceOnDemandSessionIdProvider
 		capabilities.setCapability("browserName", browserName);
 		capabilities.setCapability("locationServicesAuthorized", true);
 		capabilities.setCapability("nativeWebTap", true);
-		capabilities.setCapability("name", this.getClass().getName() + " " + testName.getMethodName());
+
+		capabilities.setCapability("name", this.getClass().getName() + " " + testName.getMethodName() + " on " + deviceName);
 
 		return capabilities;
 	}
@@ -77,13 +76,16 @@ public class SauceTestBase implements SauceOnDemandSessionIdProvider
 	@Before
 	public void setup() throws MalformedURLException
 	{
-		url = getSauceURL(SAUCE_USERNAME, SAUCE_ACCESS_KEY);
+		url = new URL(appiumUrl);
+
 		capabilities = getAppiumCapabilities(platformName, platformVersion, deviceName, browserName);
-		capabilities.setCapability("name", this.getClass().getName() + testName.getMethodName());
+		System.out.println("DESIRED CAPABILITIES: " + capabilities);
 
 		driver = new IOSDriver<WebElement>(url, capabilities);
 		sessionId = driver.getSessionId().toString();
 		wait = new WebDriverWait(driver, 60);
+
+		System.out.println("DRIVER: " + driver + driver.getCapabilities());
 	}
 
 	@After
