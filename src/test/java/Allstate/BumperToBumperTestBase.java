@@ -56,22 +56,20 @@ public class BumperToBumperTestBase
 
 	protected void executeSteps()
 	{
-		driver.get("https://www-stest.allstate.com/anon/bumpertobumper/default.aspx");
-		wait.until(ExpectedConditions.titleIs(BumperToBumperPage.title));
+		System.out.println("opening " + BumperToBumperPage.url);
+		driver.get(BumperToBumperPage.url);
 
 		checkReadyState();
-		printInfo();
-
-		WebElement link = wait.until(
-				ExpectedConditions.elementToBeClickable(
-				By.xpath("//div[@class='footer']/div[@class='row first']/ul[@class='left']/li[1]/a")));
-		System.out.println("found element: " + link);
-
-		link.click();
-		System.out.println("clicked on element: " + link);
-
-//		checkReadyState();
 //		printInfo();
+
+		WebElement privacyStatementLink = wait.until(
+				ExpectedConditions.elementToBeClickable(
+						BumperToBumperPage.PrivacyStatementLink));
+
+		System.out.println("found element: " + privacyStatementLink);
+
+		privacyStatementLink.click();
+		System.out.println("clicked on element: " + privacyStatementLink);
 
 		String context = driver.getContext();
 		driver.context("NATIVE_APP");
@@ -80,19 +78,16 @@ public class BumperToBumperTestBase
 		System.out.println(driver.getContext());
 
 		driver.findElement(MobileBy.id("Allow")).click();
-		System.out.println("click Allow");
-
-		sleep(10);
+		System.out.println("clicked Allow");
 
 		System.out.println("switch back to web context");
 		driver.context(context);
 
-		printInfo();
+//		printInfo();
+
 		AppiumUtil.ContextHandler.switchWebContext(driver);
-		sleep(10);
 
-		printInfo();
-
+//		printInfo();
 		checkReadyState();
 
 		wait.until(ExpectedConditions.titleIs(PrivacyStatementPage.title));
@@ -128,9 +123,9 @@ public class BumperToBumperTestBase
 			setCapability("platformVersion", "11.3");
 			setCapability("deviceName", "iPad Pro (12.9 inch) (2nd generation) Simulator");
 			setCapability("browserName", "Safari");
-			setCapability("nativeWebTap", true);
+//			setCapability("nativeWebTap", true);
 			setCapability("safariAllowPopups", true);
-//			setCapability("autoAcceptAlerts", true);
+			setCapability("autoAcceptAlerts", true);
 			setCapability("name", this.getClass().getName() + " " + testName.getMethodName());
 		}};
 
@@ -146,9 +141,9 @@ public class BumperToBumperTestBase
 			setCapability("platformName", "iOS");
 			setCapability("deviceName", "iPad Pro 12.9");
 			setCapability("browserName", "Safari");
-//			setCapability("nativeWebTap", true);
+			setCapability("nativeWebTap", true);
 			setCapability("safariAllowPopups", true);
-//			setCapability("autoAcceptAlerts", true);
+			setCapability("autoAcceptAlerts", true);
 			setCapability("name", getTestName());
 			setCapability("testobject_api_key", TESTOBJECT_API_KEY);
 		}};
