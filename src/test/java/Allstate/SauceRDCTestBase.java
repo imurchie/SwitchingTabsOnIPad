@@ -1,6 +1,7 @@
 package Allstate;
 
 import com.saucelabs.common.SauceOnDemandAuthentication;
+import com.saucelabs.common.SauceOnDemandSessionIdProvider;
 import com.saucelabs.junit.SauceOnDemandTestWatcher;
 import com.saucelabs.saucerest.SauceREST;
 import io.appium.java_client.AppiumDriver;
@@ -15,15 +16,14 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import com.saucelabs.common.SauceOnDemandSessionIdProvider;
 
-public class SauceTestBase implements SauceOnDemandSessionIdProvider
+public class SauceRDCTestBase implements SauceOnDemandSessionIdProvider
 {
 	public static String SAUCE_USERNAME = System.getenv("SAUCE_USERNAME");
 	public static String SAUCE_ACCESS_KEY = System.getenv("SAUCE_ACCESS_KEY");
 
-	public static String SAUCE_URL = "https://" + SAUCE_USERNAME + ":" + SAUCE_ACCESS_KEY + "@ondemand.saucelabs.com/wd/hub";
 	public static String LOCAL_APPIUM_URL = "http://localhost:4723/wd/hub";
+	public static String SAUCE_URL = "https://" + SAUCE_USERNAME + ":" + SAUCE_ACCESS_KEY + "@ondemand.saucelabs.com/wd/hub";
 	public static String TESTOBJECT_URL = "https://us1.appium.testobject.com/wd/hub";
 
 	protected SauceREST api = new SauceREST(SAUCE_USERNAME, SAUCE_ACCESS_KEY);
@@ -33,7 +33,7 @@ public class SauceTestBase implements SauceOnDemandSessionIdProvider
 	protected String platformVersion;
 	protected String deviceName;
 	protected String browserName;
-	protected String appiumUrl = SAUCE_URL;
+	protected String appiumUrl = TESTOBJECT_URL;
 
 	protected URL url;
 	protected DesiredCapabilities capabilities;
@@ -44,10 +44,10 @@ public class SauceTestBase implements SauceOnDemandSessionIdProvider
 	@Rule
 	public TestName testName = new TestName();
 
-	@Rule
-	public SauceOnDemandTestWatcher resultReportingTestWatcher = new SauceOnDemandTestWatcher(this, authentication);
+//	@Rule
+//	public SauceOnDemandTestWatcher resultReportingTestWatcher = new SauceOnDemandTestWatcher(this, authentication);
 
-	public SauceTestBase(String platformName, String platformVersion, String deviceName, String browserName)
+	public SauceRDCTestBase(String platformName, String platformVersion, String deviceName, String browserName)
 	{
 		this.platformName = platformName;
 		this.platformVersion = platformVersion;
@@ -59,17 +59,16 @@ public class SauceTestBase implements SauceOnDemandSessionIdProvider
 	{
 		DesiredCapabilities capabilities = new DesiredCapabilities();
 
-		capabilities.setCapability("appiumVersion", "1.8.1");
 		capabilities.setCapability("platformVersion", platformVersion);
 		capabilities.setCapability("platformName", platformName);
 		capabilities.setCapability("deviceName", deviceName);
-		capabilities.setCapability("deviceOrientation", "portrait");
 		capabilities.setCapability("browserName", browserName);
-		capabilities.setCapability("locationServicesAuthorized", true);
-		capabilities.setCapability("nativeWebTap", true);
+//		capabilities.setCapability("nativeWebTap", true);
 		capabilities.setCapability("safariAllowPopups", true);
 
 		capabilities.setCapability("name", this.getClass().getName() + " " + testName.getMethodName() + " on " + deviceName);
+
+		capabilities.setCapability("testobject_api_key", System.getenv("TESTOBJECT_API_KEY"));
 
 		return capabilities;
 	}

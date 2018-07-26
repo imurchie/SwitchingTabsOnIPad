@@ -10,20 +10,19 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import java.util.LinkedList;
 
 @RunWith(ConcurrentParameterized.class)
-public class BumperToBumperPrivacyStatementTest extends SauceTestBase
+public class BumperToBumperPrivacyStatementTestRDC extends SauceRDCTestBase
 {
 	@ConcurrentParameterized.Parameters
 	public static LinkedList getDevices()
 	{
 		return new LinkedList() {{
-			add(new String[] {"iOS", "11.3", "iPad Pro (12.9 inch) (2nd generation) Simulator", "Safari"});
-//			add(new String[] {"iOS", "11.3", "iPad Pro (9.7 inch) Simulator", "Safari"});
-//			add(new String[] {"iOS", "11.3", "iPhone 7 Simulator", "Safari"});
-
+			add(new String[] {"iOS", "11.4.1", "iPad Pro 12.9", "Safari"});
+			add(new String[] {"iOS", "11.4.1", "iPad Pro 9.7", "Safari"});
+			add(new String[] {"iOS", "11.4.1", "iPhone 7", "Safari"});
 		}};
 	}
 
-	public BumperToBumperPrivacyStatementTest(String platformName, String platformVersion, String deviceName, String browserName)
+	public BumperToBumperPrivacyStatementTestRDC(String platformName, String platformVersion, String deviceName, String browserName)
 	{
 		super(platformName, platformVersion, deviceName, browserName);
 	}
