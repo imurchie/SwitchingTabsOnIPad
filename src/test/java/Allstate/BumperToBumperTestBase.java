@@ -54,13 +54,13 @@ public class BumperToBumperTestBase
 		}
 	}
 
-	protected void executeSteps()
+	protected void openTabByClickingAllowInNativeContext()
 	{
 		System.out.println("opening " + BumperToBumperPage.url);
 		driver.get(BumperToBumperPage.url);
 
 		checkReadyState();
-//		printInfo();
+		printInfo();
 
 		WebElement privacyStatementLink = wait.until(
 				ExpectedConditions.elementToBeClickable(
@@ -87,7 +87,8 @@ public class BumperToBumperTestBase
 
 		AppiumUtil.ContextHandler.switchWebContext(driver);
 
-//		printInfo();
+		printInfo();
+
 		checkReadyState();
 
 		wait.until(ExpectedConditions.titleIs(PrivacyStatementPage.title));

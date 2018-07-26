@@ -11,20 +11,20 @@ public class BumperToBumperTests extends BumperToBumperTestBase
 	public void shouldOpenPrivacyStatement_Local() throws MalformedURLException
 	{
 		useLocalIpadSimulator();
-		executeSteps();
+		openTabByClickingAllowInNativeContext();
 	}
 
 	@Test
 	public void shouldOpenPrivacyStatement_Sauce() throws MalformedURLException
 	{
 		useSauceIpadSimulator();
-		executeSteps();
+		openTabByClickingAllowInNativeContext();
 	}
 
 	@Test
 	public void shouldOpenPrivacyStatement_RDC() throws MalformedURLException
 	{
 		useSauceIpadRDC();
-		executeSteps();
+		openTabByClickingAllowInNativeContext();
 	}
 }

@@ -16,6 +16,6 @@ public class BumperToBumperTestSauce extends BumperToBumperTestBase
 	@Test
 	public void shouldOpenPrivacyStatementInNewTab()
 	{
-		executeSteps();
+		openTabByClickingAllowInNativeContext();
 	}
 }
