@@ -1,6 +1,9 @@
 import io.appium.java_client.AppiumDriver;
+import io.appium.java_client.MobileBy;
 import io.appium.java_client.ios.IOSDriver;
+import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Rectangle;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -14,33 +17,71 @@ public class ClickPrivacyStatement
 {
 	public static void main(String[] args) throws MalformedURLException
 	{
-		URL url = getSauceURL();
+		// URL url = getSauceURL();
+		URL url = getLocalURL();
 		DesiredCapabilities capabilities = useIPadPro12Inch();
 		AppiumDriver<WebElement> driver = new IOSDriver<>(url, capabilities);
 		WebDriverWait wait = new WebDriverWait(driver, 60);
 
-		driver.get("https://www-stest.allstate.com/anon/bumpertobumper/default.aspx");
+		try {
+			driver.get("https://www-stest.allstate.com/anon/bumpertobumper/default.aspx");
 
-		waitForPageToLoad(driver);
-		printInfo(driver);
+			try {
+				wait.until(ExpectedConditions.titleIs("Allstate Bumper-to-Bumper Basics | Auto Insurance Guide"));
+				System.out.println("Title is right");
+			} catch (Exception e) {
+				System.out.println("Title never appeared. Continuing...");
+			}
 
-		WebElement link = wait.until(ExpectedConditions.elementToBeClickable(By.linkText("Privacy Statement")));
-		System.out.println("found: " + link);
+			waitForPageToLoad(driver);
+			printInfo(driver);
 
-		waitForPageToLoad(driver);
-		printInfo(driver);
+			// Giant iPads don't work for clicking with nativeWebTap :(
+			// so try with native tap
+			String currentContext = driver.getContext();
+			driver.context("NATIVE_APP");
 
-		link.click();
-		System.out.println("clicked: " + link);
+			try {
+				WebElement link = driver.findElementByAccessibilityId("Privacy Statement");
 
-		sleep(10);
-		switchWebContext(driver);
-		sleep(10);
+				// print out the rectangle so we can see how nativeWebTap is mis-calculating
+				// the coordinates
+				Rectangle rect = link.getRect();
+				System.out.println("x: " + rect.getX() + ", y: " + rect.getY() + ", width: " + rect.getWidth() + ", height: " + rect.getHeight());
 
-		wait.until(ExpectedConditions.titleIs("Allstate.com - Learn More About Allstate Insurance Company"));
+				// do the native action
+				link.click();
+				System.out.println("found and clicked (native): " + link);
+			} catch (Exception e) {
+				// failed! go back into the web context and pray harder
+				driver.context(currentContext);
 
-		waitForPageToLoad(driver);
-		printInfo(driver);
+				WebElement link = wait.until(ExpectedConditions.elementToBeClickable(By.linkText("Privacy Statement")));
+				link.click();
+				System.out.println("found and clicked (web): " + link);
+			} finally {
+				if (driver.getContext() != currentContext) {
+					driver.context(currentContext);
+				}
+			}
+
+			// this is not necessary in 1.8.2, when that is released
+			sleep(10);
+			switchWebContext(driver);
+			sleep(10);
+
+			wait.until(ExpectedConditions.titleIs("Allstate.com - Learn More About Allstate Insurance Company"));
+
+			waitForPageToLoad(driver);
+			printInfo(driver);
+		} finally {
+			driver.quit();
+		}
+	}
+
+	public static URL getLocalURL() throws MalformedURLException
+	{
+		return new URL("http://0.0.0.0:4723/wd/hub");
 	}
 
 	public static URL getSauceURL() throws MalformedURLException
@@ -57,7 +98,7 @@ public class ClickPrivacyStatement
 	public static DesiredCapabilities useIPadPro12Inch()
 	{
 		DesiredCapabilities capabilities = getIOSSimulator();
-		capabilities.setCapability("deviceName", "iPad Pro (12.9 inch) (2nd generation) Simulator");
+		capabilities.setCapability("deviceName", "iPad Pro (12.9-inch) (2nd generation)");
 		return capabilities;
 	}
 
@@ -85,7 +126,7 @@ public class ClickPrivacyStatement
 		capabilities.setCapability("nativeWebTap", true);
 		capabilities.setCapability("autoAcceptAlerts", true);
 		capabilities.setCapability("locationServicesAuthorized", true);
-		capabilities.setCapability("safariAllowPopups", true);
+		capabilities.setCapability("showIOSLog", false);
 		capabilities.setCapability("name", "Allstate - Click Privacy Statement Link");
 		return capabilities;
 	}
@@ -105,23 +146,25 @@ public class ClickPrivacyStatement
 
 	public static void waitForPageToLoad(AppiumDriver<WebElement> driver)
 	{
-		for(int i=0; i<10; i++)
-		{
+		for(int i = 0; i < 3; i++) {
+			System.out.print("Checking readyState... ");
 			String readyState = driver.executeScript("return document.readyState;").toString();
-			System.out.println("readyState: " + readyState);
+			System.out.println(readyState);
 
-			if (readyState.equalsIgnoreCase("complete")) { return; }
-			sleep(1);
+			if (readyState.equalsIgnoreCase("complete")) {
+				driver.executeScript("return window.stop()");
+				return;
+			}
 		}
 
 		driver.executeScript("return window.stop()");
 	}
 
-	public static void sleep(int seconds)
+	public static void sleep(int ms)
 	{
 		try
 		{
-			Thread.sleep(1000 * seconds);
+			Thread.sleep(1000 * ms);
 		}
 		catch (InterruptedException e)
 		{
