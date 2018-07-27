@@ -1,3 +1,5 @@
+package Allstate.Scenarios;
+
 import io.appium.java_client.AppiumDriver;
 import io.appium.java_client.ios.IOSDriver;
 import org.openqa.selenium.By;
@@ -10,7 +12,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Set;
 
-public class ClickPrivacyStatement
+public class StopPageLoad
 {
 	public static void main(String[] args) throws MalformedURLException
 	{
@@ -24,20 +26,16 @@ public class ClickPrivacyStatement
 		waitForPageToLoad(driver);
 		printInfo(driver);
 
-		WebElement link = wait.until(ExpectedConditions.elementToBeClickable(By.linkText("Privacy Statement")));
-		System.out.println("found: " + link);
-
-		waitForPageToLoad(driver);
-		printInfo(driver);
-
-		link.click();
-		System.out.println("clicked: " + link);
+		wait.until(ExpectedConditions.elementToBeClickable(By.linkText("Privacy Statement"))).click();
 
 		sleep(10);
 		switchWebContext(driver);
 		sleep(10);
 
-		wait.until(ExpectedConditions.titleIs("Allstate.com - Learn More About Allstate Insurance Company"));
+		waitForPageToLoad(driver);
+		printInfo(driver);
+
+		wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//a[@href='/about/NY-domestic-violence-notice.aspx']")));
 
 		waitForPageToLoad(driver);
 		printInfo(driver);
@@ -111,10 +109,11 @@ public class ClickPrivacyStatement
 			System.out.println("readyState: " + readyState);
 
 			if (readyState.equalsIgnoreCase("complete")) { return; }
-			sleep(1);
+
+			sleep(5);
 		}
 
-		driver.executeScript("return window.stop()");
+		driver.executeScript("return window.stop();");
 	}
 
 	public static void sleep(int seconds)
